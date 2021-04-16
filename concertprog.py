@@ -29,7 +29,7 @@ con.sort_values(by=["StudentNumber"], inplace = True)
 
 #Creating the frame
 window = tk.Tk()
-frame = tk.Frame(master=window,borderwidth=5)
+frame = tk.Frame(master=window,borderwidth=10)
 greeting = tk.Label(text="Concert Attendance Program")
 
 
@@ -42,8 +42,8 @@ def handle_compile_click():
     
 compile_button = tk.Button(
     text="Compile",
-    width=25,
-    height=5,
+    width=40,
+    height=10,
     bg="white",
     fg="black",
     borderwidth = 5,
@@ -75,6 +75,7 @@ def handle_search_click():
          if id in row[3]:
             if(namealready==0):
                  print(row[1],row[2],row[3])
+                 name_mes = row[1] +" "+ row[2] +" "+  row[3]
                  namealready +=1      
             print (row[6])
             totalcount += 1
@@ -90,19 +91,32 @@ def handle_search_click():
                     stdenscount+= 1
             if("outside" in row[6]):
                     outsidecount+= 1
+                    
+            ts = str(totalcount)
+            gcs = str(guestcount)
+            nc = str(nooncount)
+            stcs = str(sturecitalcount)
+            fcs = str(faccount)
+            secs = str(stdenscount)
+            opcs = str(outsidecount)
             
-            print("Total Concerts Attended: ",totalcount )
-            print("Guest Artist Concerts Attended: ", guestcount)
-            print("Music at Noon Concerts Attended: ", nooncount)
-            print("Student Recital Concerts Attended: ", sturecitalcount)
-            print("Faculty Recital Concerts Attended: ", faccount)
-            print("Student Ensemble Concerts Attended: ", stdenscount)
-            print("Outside Professional Concerts Attended: ", outsidecount)
-            print("\n\n")
+            mes_string = ("Total Concerts Attended: " + ts +"\n"
+                          + "Guest Artist Concerts Attended: " + gcs +"\n"
+                          +"Music at Noon Concerts Attended: " + nc +"\n"
+                          +"Student Recital Concerts Attended: " + stcs +"\n"
+                          +"Faculty Recital Concerts Attended: "+ fcs +"\n"
+                          +"Student Ensemble Concerts Attended: " + secs +"\n"
+                          +"Outside Professional Concerts Attended: " + opcs +"\n"
+                          )
+            
+            messagebox.showinfo(name_mes,mes_string)
+            print(mes_string)
+            
+           
 search_button = tk.Button(
     text="Search",
-    width = 25,
-    height = 5,
+    width = 40,
+    height = 10,
     bg="white",
     fg="black",
     borderwidth = 5,
@@ -125,16 +139,20 @@ def handle_encrypt_click():
             encrypted_file.write(encrypted)
         print("Created encrypted file CpytMaster.csv")
         print("Encryption key stored at keyfile.key\n\n")
+        messagebox.showinfo("Encrypt","Created an encrypted file at CyptMaster.csv and a key at keyfile.key")
 
 encrypt_button = tk.Button(
     text="Encrypt",
-    width = 25,
-    height = 5,
+    width = 40,
+    height = 10,
     bg="white",
     fg="black",
     borderwidth = 5,
     command = lambda:handle_encrypt_click()
 )
+
+
+
 
 
 #Packing the UI elements
