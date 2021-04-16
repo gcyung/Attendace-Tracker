@@ -1,0 +1,166 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Apr 15 21:58:45 2021
+
+@author: james
+"""
+
+#!/usr/bin/env python
+# coding: utf-8
+
+import csv
+import pandas as pd
+from glob import glob
+import os
+from cryptography.fernet import Fernet
+import tkinter as tk
+from tkinter import simpledialog
+from tkinter import messagebox
+
+
+#Reading in all of the files within the current folder with that start with a biola string.
+filenames = glob('biola*.csv') 
+dataframes = [pd.read_csv(f) for f in filenames]
+con = pd.concat([pd.read_csv(fp).assign(Concert=os.path.basename(fp)) for fp in filenames])
+con.sort_values(by=["StudentNumber"], inplace = True)
+
+
+###Creating a UI###
+
+#Creating the frame
+window = tk.Tk()
+frame = tk.Frame(master=window,borderwidth=5)
+greeting = tk.Label(text="Concert Attendance Program")
+
+
+
+#Creating the Buttons
+
+def handle_compile_click():
+    con.to_csv('Master.csv')
+    messagebox.showinfo("Compile","Created a master file at Master.csv")
+    
+compile_button = tk.Button(
+    text="Compile",
+    width=25,
+    height=5,
+    bg="white",
+    fg="black",
+    borderwidth = 5,
+    command = lambda:handle_compile_click()
+)
+
+
+
+def handle_search_click():
+     totalcount = 0
+     guestcount = 0
+     nooncount = 0
+     sturecitalcount = 0
+     faccount=0
+     stdenscount = 0
+     outsidecount = 0
+     namealready = 0
+     valid = False
+     while(valid == False):
+         id = simpledialog.askstring("Search", "Type in the ID number that you want to search.", parent=window)
+         if (len(id) != 7):
+             messagebox.showerror("Error", "Invalid ID number, please try again.")
+         else:
+             valid = True
+     searchfile = open('master.csv', 'r')
+     reader = csv.reader(searchfile, delimiter = ',')
+        
+     for row in reader:
+         if id in row[3]:
+            if(namealready==0):
+                 print(row[1],row[2],row[3])
+                 namealready +=1      
+            print (row[6])
+            totalcount += 1
+            if("Guest-Artist" in row[6]):
+                    guestcount+= 1
+            if("Music-Noon" in row[6]):
+                    nooncount+= 1
+            if("Student-Recital" in row[6]):
+                    sturecitalcount+= 1 
+            if("Faculty-Recital" in row[6]):
+                    faccount+= 1
+            if("Student-Ensemble" in row[6]):
+                    stdenscount+= 1
+            if("outside" in row[6]):
+                    outsidecount+= 1
+            
+            print("Total Concerts Attended: ",totalcount )
+            print("Guest Artist Concerts Attended: ", guestcount)
+            print("Music at Noon Concerts Attended: ", nooncount)
+            print("Student Recital Concerts Attended: ", sturecitalcount)
+            print("Faculty Recital Concerts Attended: ", faccount)
+            print("Student Ensemble Concerts Attended: ", stdenscount)
+            print("Outside Professional Concerts Attended: ", outsidecount)
+            print("\n\n")
+search_button = tk.Button(
+    text="Search",
+    width = 25,
+    height = 5,
+    bg="white",
+    fg="black",
+    borderwidth = 5,
+    command = lambda:handle_search_click()
+)
+
+
+def handle_encrypt_click():
+     key = Fernet.generate_key()
+  
+     with open('filekey.key', 'wb') as filekey:
+         filekey.write(key)
+     with open('filekey.key', 'rb') as filekey:
+         key = filekey.read()
+         fernet = Fernet(key)
+     with open('master.csv', 'rb') as file:
+        original = file.read()    
+        encrypted = fernet.encrypt(original)
+        with open('CpytMaster.csv', 'wb') as encrypted_file:
+            encrypted_file.write(encrypted)
+        print("Created encrypted file CpytMaster.csv")
+        print("Encryption key stored at keyfile.key\n\n")
+
+encrypt_button = tk.Button(
+    text="Encrypt",
+    width = 25,
+    height = 5,
+    bg="white",
+    fg="black",
+    borderwidth = 5,
+    command = lambda:handle_encrypt_click()
+)
+
+
+#Packing the UI elements
+greeting.pack()
+compile_button.pack()
+search_button.pack()
+encrypt_button.pack()
+frame.pack()
+
+
+#Creating a Writeable string for GUI output.
+class WritableStringVar(tk.StringVar):
+    def write(self, added_text):
+        new_text = self.get() + added_text
+        self.set(new_text)
+
+    def clear(self):
+        self.set("")
+
+
+
+
+
+
+#calling the program's main loop
+window.mainloop()
+
+
+
