@@ -92,15 +92,15 @@ def handle_search_click():
             if("outside" in row[6]):
                     outsidecount+= 1
                     
-            ts = str(totalcount)
-            gcs = str(guestcount)
-            nc = str(nooncount)
-            stcs = str(sturecitalcount)
-            fcs = str(faccount)
-            secs = str(stdenscount)
-            opcs = str(outsidecount)
+     ts = str(totalcount)
+     gcs = str(guestcount)
+     nc = str(nooncount)
+     stcs = str(sturecitalcount)
+     fcs = str(faccount)
+     secs = str(stdenscount)
+     opcs = str(outsidecount)
             
-            mes_string = ("Total Concerts Attended: " + ts +"\n"
+     mes_string = ("Total Concerts Attended: " + ts +"\n"
                           + "Guest Artist Concerts Attended: " + gcs +"\n"
                           +"Music at Noon Concerts Attended: " + nc +"\n"
                           +"Student Recital Concerts Attended: " + stcs +"\n"
@@ -109,8 +109,8 @@ def handle_search_click():
                           +"Outside Professional Concerts Attended: " + opcs +"\n"
                           )
             
-            messagebox.showinfo(name_mes,mes_string)
-            print(mes_string)
+     messagebox.showinfo(name_mes,mes_string)
+     print(mes_string)
             
            
 search_button = tk.Button(
@@ -163,14 +163,6 @@ encrypt_button.pack()
 frame.pack()
 
 
-#Creating a Writeable string for GUI output.
-class WritableStringVar(tk.StringVar):
-    def write(self, added_text):
-        new_text = self.get() + added_text
-        self.set(new_text)
-
-    def clear(self):
-        self.set("")
 
 
 
